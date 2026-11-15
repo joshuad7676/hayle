@@ -1,0 +1,22 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard</title><link rel="stylesheet" href="style.css"></head><body>
+<div class="wrap"><h1>⚙️ Dashboard</h1><a class="btn ghost" href="/logout">Logout</a>
+<label>Server ID <input id="gid" placeholder="right-click server → Copy ID"></label>
+<button class="btn primary" onclick="load()">Load</button>
+<div id="out"></div>
+<h3>Welcome</h3><input id="wmsg" style="width:100%" placeholder="Welcome {user} to {server}!">
+<h3>Ticket questions (one per line, max 5)</h3><textarea id="tq" rows="5" style="width:100%"></textarea>
+<h3>Verify min age (days)</h3><input id="vage" type="number" value="7">
+<button class="btn primary" onclick="save()">💾 Save</button>
+</div>
+<script>
+let GID='';
+async function load(){GID=gid.value.trim();const r=await fetch('/api/guild/'+GID);const c=await r.json();
+wmsg.value=c.welcome?.message||'';tq.value=(c.tickets?.questions||[]).join('\n');vage.value=c.verify?.minAge??7;
+out.innerText='Loaded '+GID;}
+async function save(){const r=await fetch('/api/guild/'+GID,{method:'POST',headers:{'Content-Type':'application/json'},
+body:JSON.stringify({welcome:{message:wmsg.value,enabled:true},tickets:{questions:tq.value.split('\n').map(s=>s.trim()).filter(Boolean)},verify:{minAge:+vage.value}})});
+out.innerText=(await r.json()).ok?'✅ Saved':'❌ Failed';}
+fetch('/api/me').then(r=>r.json()).then(d=>{if(d.guilds)out.innerHTML='Your servers:<br>'+d.guilds.map(g=>`${g.name} — <code>${g.id}</code>`).join('<br>');});
+</script>
+</body></html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YourBot — Add to Discord</title><link rel="stylesheet" href="style.css"></head><body>
+<div class="wrap">
+<h1>🤖 YourBot</h1>
+<p class="sub">Roles • Welcome • Embeds • Mod • Tickets + Q&A • Verify + alt detection • Activity • Snipe • Logs • Raid protect • Events • AI</p>
+<div class="card">
+<a id="guildBtn" class="btn primary" href="#">➕ Add to Server</a>
+<a id="userBtn" class="btn" href="#">👤 Install to My Account (DM commands)</a>
+<a class="btn ghost" href="/login">🔑 Dashboard Login</a>
+</div>
+<div class="card"><h3>Global DM commands</h3><code>/ask</code> <code>/generate</code> <code>/help</code> — work in DMs after user-install.</div>
+<div class="card"><h3>Quick setup (in server)</h3><pre>/welcome set  /logs setup  /ticket setup
+/verify setup  /verify panel  /raid setup
+/embed create  /event create  /help</pre></div>
+</div>
+<script>fetch('/api/invite').then(r=>r.json()).then(d=>{guildBtn.href=d.guildInstall;userBtn.href=d.userInstall;});</script>
+</body></html>

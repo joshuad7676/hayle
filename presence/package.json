@@ -1,0 +1,14 @@
+{
+  "name": "hayle-presence",
+  "version": "1.0.0",
+  "description": "Local companion: shows Hayle as Discord Rich Presence on your profile while you run it",
+  "main": "hayle-presence.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node hayle-presence.js"
+  },
+  "dependencies": {
+    "@xhayper/discord-rpc": "^1.3.0",
+    "dotenv": "^16.4.5"
+  }
+}

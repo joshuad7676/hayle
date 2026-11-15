@@ -1,0 +1,30 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verify</title><link rel="stylesheet" href="style.css"></head><body>
+<div class="wrap"><h1>🔗 Alt-proof verification</h1>
+<p class="sub">Step 1: login with Discord → Step 2: link this browser (IP + device fingerprint).</p>
+<div class="card"><a class="btn primary" href="#" id="login">1️⃣ Login with Discord</a></div>
+<div class="card"><button class="btn primary" id="finish">2️⃣ Complete verification</button>
+<p id="out"></p></div></div>
+<script>
+const g = new URLSearchParams(location.search).get('guild') || '';
+login.href = '/verify-login?guild=' + encodeURIComponent(g);
+async function fp() {
+  const s = [navigator.userAgent, screen.width + 'x' + screen.height + 'x' + screen.colorDepth,
+    Intl.DateTimeFormat().resolvedOptions().timeZone, navigator.language,
+    navigator.hardwareConcurrency, navigator.deviceMemory || '?'].join('|');
+  let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+  for (let i = 0; i < s.length; i++) { const c = s.charCodeAt(i); h1 = Math.imul(h1 ^ c, 2654435761); h2 = Math.imul(h2 ^ c, 1597334677); }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return (h2 >>> 0).toString(16) + (h1 >>> 0).toString(16);
+}
+finish.onclick = async () => {
+  out.innerText = 'Checking…';
+  const r = await fetch('/api/verify-complete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ guild: g, fp: await fp() }) });
+  const d = await r.json();
+  out.innerText = d.error ? '❌ Login with Discord first (step 1).'
+    : d.blocked ? `🚨 Blocked — alt or too young. Alts: ${d.alts.join(', ') || 'age check'} (${d.ageDays}d). Staff will review.`
+    : `✅ Verified as ${d.user}! ${d.roleGiven ? 'Role given.' : 'Role NOT auto-given — ' + (d.roleError || 'rejoin server / ask staff')}`;
+};
+</script>
+</body></html>

@@ -1,0 +1,23 @@
+# Render blueprint — https://render.com/docs/blueprint-spec
+# Free web services sleep after inactivity; the in-bot health endpoint +
+# an UptimeRobot ping keeps Hayle awake. For always-on, use a paid
+# Background Worker instead (start command: npm start).
+services:
+  - type: web
+    name: hayle-bot
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: CLIENT_ID
+        sync: false
+      - key: GUILD_ID
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: BOT_INVITE_URL
+        sync: false
